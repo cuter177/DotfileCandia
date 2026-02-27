@@ -1,0 +1,161 @@
+{
+	  "layer": "top",
+    "position": "top",
+    "width": "100%",
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
+
+    //Modules layout
+
+	"modules-left": ["custom/launcher", "cpu", "memory", "custom/bluetooth","hyprland/workspaces", "custom/cava"],
+    "modules-center": ["custom/media"],
+    "modules-right": ["backlight","network", "pulseaudio", "battery", "clock", "custom/power"],
+
+
+
+    // Sourced modules
+
+	"pulseaudio": {
+		"tooltip": false,
+		"scroll-step": 5,
+		"format": "{icon} {volume}%",
+		"format-muted": "{icon} {volume}%",
+		"on-click": "~/.config/waybar/scripts/pavucontrol-popup.sh",		
+    "format-icons": {
+			"default": [
+                "<span color='#7aa2f7'> </span>",
+                "<span color='#7aa2f7'> </span>",
+                "<span color='#7aa2f7'> </span>"
+            ]
+		}
+	},
+    "hyprland/workspaces": {
+		"disable-scroll": true,
+        "on-click": "activate",
+        "all-outputs": true,
+        "active-only": false,
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+        },
+        "format": "{icon}",
+        "format-icons": {
+            "active": "<span font='12'>󰮯</span>",
+            "empty": "<span font='8'></span>",
+            "persistent": "󰊠",
+        },
+    },
+	"network": {
+    // Puedes omitir "interface" si quieres detección automática
+    "format-wifi": " {signalStrength}%",         // Para Wi-Fi
+    "format-ethernet": "󰈁",                       // Solo el ícono Ethernet
+    "format-disconnected": "",                   // Ícono cuando no hay red
+    "tooltip": true,                               // Si quieres que al pasar el cursor sí aparezca la IP
+    "on-click": "nm-connection-editor"
+    },
+
+	"backlight": {
+		"tooltip": false,
+		"format": "󰖨 {}%",
+		"interval":1,
+        "on-scroll-up": "light -A 5",
+		"on-scroll-down": "light -U 5",
+    "on-click": "~/.config/waybar/scripts/brightness-popup.sh"
+	},
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 10
+        },
+        "format": "{icon}  <span color='#F1F1F1'>{capacity}%</span>",
+        "format-charging": "<span color='#9ece6a'></span> <span color='#F1F1F1'>{capacity}%</span>",
+        "format-plugged": " <span color='#F1F1F1'>{capacity}</span>%",
+        "format-alt": "<span color='#F1F1F1'>{time}</span> {icon}",
+        "format-icons": [
+            "<span color='#f7768e'></span>",
+            "<span color='#e0af68'></span>",
+            "<span color='#e0af68'></span>",
+            "<span color='#9ece6a'></span>",
+            "<span color='#9ece6a'></span>"
+        ]
+    },
+
+	"clock": {
+        "tooltip": true,
+        "interval": 60,
+        "format": "{:%H:%M}",
+        "tooltip-format": "{:%Y-%m-%d}",
+        "on-click": "~/.config/waybar/scripts/calendario.sh"
+    },
+
+    "group/system-info": {
+        "orientation": "horizontal",
+        "modules": ["cpu", "memory", "disk"],
+        "on-hover": "expand"
+    },
+
+    "cpu": {
+        "interval": 15,
+        "format": "<span color='#f7768e'> </span> {}%",
+        "max-length": 10,
+        "id": "system-info-cpu"
+    },
+
+    "memory": {
+        "interval": 30,
+        "format": "<span color='#7dcfff'> </span> {used}GB",
+        "max-length": 10,
+        "id": "system-info-memory"
+    },
+
+        "disk": {
+        "format": "<span color='#e0af68'> </span> {used}",
+        "interval": 1,
+        "id": "system-info-disk"
+    },
+
+    "custom/media": {
+      "interval": 5,
+      "return-type": "json",
+      "exec": "~/.config/waybar/scripts/spotify-media.sh",
+      "max-length": 40,
+      "on-click": "~/.config/waybar/scripts/goto-spotify.sh",
+      "on-click-right": "playerctl -p spotify play-pause"
+    },
+
+
+    "custom/launcher":{
+        "format": " ",
+        "on-click": "rofi -show drun",
+        "on-click-right": "killall rofi"
+    },
+    "custom/power":{
+        "format": "<span color='#f7768e'>⏻</span>",
+        "on-click": "wlogout",
+    },
+    "custom/updates":{
+        "format": "{} Update(s)",
+        "exec": "checkupdates | wc -l",
+        "exec-if": "[[ $(checkupdates | wc -l) != 0 ]]",
+        "interval": 15,
+        "on-click": "alacritty -e paru -Syu && notify-send 'The system has been updated' "
+    },
+    "custom/bluetooth": {
+        //"format": "󰂯",
+        "exec": "~/.config/waybar/scripts/bluetooth-status.sh",
+        "interval" :10,
+        "on-click": "blueman-manager"
+    },
+    "custom/cava": {
+      "exec": "/home/candia/.config/waybar/scripts/cava.sh",
+      "return-type": "raw",
+      "tooltip": false
+    }
+}
