@@ -8,26 +8,26 @@ Minimal, clean and Tokyo Night inspired rice.
 
 ## 🖥️ Environment
 
-- **WM:** Hyprland  
-- **Bar:** Waybar (custom modules + Spotify MPRIS + Cava)  
-- **Terminal:** Kitty  
-- **Shell:** Zsh + Powerlevel10k  
-- **Editor:** Neovim (LazyVim)  
-- **System Info:** Fastfetch  
+- **WM:** Hyprland
+- **Bar:** Waybar (custom modules + Spotify MPRIS + Cava)
+- **Terminal:** Kitty
+- **Shell:** Zsh + Powerlevel10k
+- **Editor:** Neovim (LazyVim)
+- **System Info:** Fastfetch
 
 ---
 
 ## ✨ Features
 
-- Spotify (Flatpak) integration via MPRIS  
-- Cava audio visualizer in Waybar  
-- Custom media module  
-- Bluetooth status indicator  
-- Volume & brightness popups  
-- Power menu (wlogout)  
-- Persistent Hyprland workspaces  
-- Nerd Font icons  
-- Tokyo Night color scheme  
+- Spotify (Flatpak) integration via MPRIS
+- Cava audio visualizer in Waybar
+- Custom media module
+- Bluetooth status indicator
+- Volume & brightness popups
+- Power menu (wlogout)
+- Persistent Hyprland workspaces
+- Nerd Font icons
+- Tokyo Night color scheme
 
 ---
 
@@ -47,7 +47,7 @@ Minimal, clean and Tokyo Night inspired rice.
 
 ## 📦 Required Packages (Arch Linux)
 
-### Install base packages:
+### Install base packages
 
 ```bash
 sudo pacman -S \
@@ -57,7 +57,7 @@ pavucontrol rofi cava \
 pacman-contrib ttf-jetbrains-mono-nerd papirus-icon-theme
 ```
 
-### AUR packages:
+### AUR packages
 
 ```bash
 yay -S hyprpaper wlogout paru
@@ -67,13 +67,13 @@ yay -S hyprpaper wlogout paru
 
 ## 🎵 Spotify (Flatpak)
 
-### Install:
+### Install
 
 ```bash
 flatpak install flathub com.spotify.Client
 ```
 
-### (Optional) Fix scaling issues:
+### Optional: Fix scaling issues
 
 ```bash
 flatpak override --user com.spotify.Client \
@@ -84,21 +84,21 @@ flatpak override --user com.spotify.Client \
 
 ## 🚀 Installation
 
-### Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/cuter177/DotfileCandia.git
 cd DotfileCandia
 ```
 
-### Copy configs:
+### Copy configs
 
 ```bash
 cp -r .config ~/
 cp .zshrc ~/
 ```
 
-### Reload Hyprland:
+### Reload Hyprland
 
 ```bash
 hyprctl reload
@@ -108,31 +108,14 @@ hyprctl reload
 
 ## 🖼️ Preview
 
-Preview del escritorio
-
-```bash
-preview.png
-```
-
-## 🙏 Credits
-
-This setup is inspired by:
-
-- https://github.com/FernuDev/Hypr-dotfiles
-
-Big thanks to FernuDev for the original configuration.
-
-
-```markdown
 ![desktop](preview.png)
-```
 
 ---
 
 ## ⚠️ Notes
 
-- Designed for Arch Linux  
-- Uses Nerd Fonts for icons  
+- Designed for **Arch Linux**
+- Uses **Nerd Fonts** for icons
 - Waybar depends on custom scripts located in:
 
 ```bash
@@ -147,6 +130,16 @@ chmod +x ~/.config/waybar/scripts/*.sh
 
 ---
 
+## 🙏 Credits
+
+This setup is inspired by:
+
+https://github.com/FernuDev/Hypr-dotfiles
+
+Big thanks to **FernuDev** for the original configuration.
+
+---
+
 ## 👤 Author
 
-Alfredo Ramírez Candia
+**Alfredo Ramírez Candia**
