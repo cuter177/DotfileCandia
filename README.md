@@ -1,44 +1,39 @@
-DotfileCandia
+# DotfileCandia
 
 Personal Arch Linux + Hyprland setup.
 
 Minimal, clean and Tokyo Night inspired rice.
 
-🖥️ Environment
+---
 
-WM: Hyprland
+## 🖥️ Environment
 
-Bar: Waybar (custom modules + Spotify MPRIS + Cava)
+- **WM:** Hyprland  
+- **Bar:** Waybar (custom modules + Spotify MPRIS + Cava)  
+- **Terminal:** Kitty  
+- **Shell:** Zsh + Powerlevel10k  
+- **Editor:** Neovim (LazyVim)  
+- **System Info:** Fastfetch  
 
-Terminal: Kitty
+---
 
-Shell: Zsh + Powerlevel10k
+## ✨ Features
 
-Editor: Neovim (LazyVim)
+- Spotify (Flatpak) integration via MPRIS  
+- Cava audio visualizer in Waybar  
+- Custom media module  
+- Bluetooth status indicator  
+- Volume & brightness popups  
+- Power menu (wlogout)  
+- Persistent Hyprland workspaces  
+- Nerd Font icons  
+- Tokyo Night color scheme  
 
-System Info: Fastfetch
+---
 
-✨ Features
+## 📂 Structure
 
-Spotify (Flatpak) integration via MPRIS
-
-Cava audio visualizer in Waybar
-
-Custom media module
-
-Bluetooth status indicator
-
-Volume & brightness popups
-
-Power menu (wlogout)
-
-Persistent Hyprland workspaces
-
-Nerd Font icons
-
-Tokyo Night color scheme
-
-📂 Structure
+```bash
 .config/
 ├── cava
 ├── fastfetch
@@ -46,61 +41,112 @@ Tokyo Night color scheme
 ├── kitty
 ├── nvim
 └── waybar
-📦 Required Packages (Arch Linux)
+```
 
-Install base packages:
+---
 
+## 📦 Required Packages (Arch Linux)
+
+### Install base packages:
+
+```bash
 sudo pacman -S \
 hyprland waybar kitty neovim zsh fastfetch \
 playerctl light networkmanager blueman \
 pavucontrol rofi cava \
 pacman-contrib ttf-jetbrains-mono-nerd papirus-icon-theme
+```
 
-AUR packages:
+### AUR packages:
 
+```bash
 yay -S hyprpaper wlogout paru
-🎵 Spotify (Flatpak)
+```
 
-Install:
+---
 
+## 🎵 Spotify (Flatpak)
+
+### Install:
+
+```bash
 flatpak install flathub com.spotify.Client
+```
 
-(Optional) Fix scaling issues:
+### (Optional) Fix scaling issues:
 
-flatpak override --user com.spotify.Client --env=ELECTRON_FORCE_DEVICE_SCALE_FACTOR=0.9
-🚀 Installation
+```bash
+flatpak override --user com.spotify.Client \
+--env=ELECTRON_FORCE_DEVICE_SCALE_FACTOR=0.9
+```
 
-Clone the repository:
+---
 
+## 🚀 Installation
+
+### Clone the repository:
+
+```bash
 git clone https://github.com/cuter177/DotfileCandia.git
 cd DotfileCandia
+```
 
-Copy configs:
+### Copy configs:
 
+```bash
 cp -r .config ~/
 cp .zshrc ~/
+```
 
-Reload Hyprland:
+### Reload Hyprland:
 
+```bash
 hyprctl reload
-🖼️ Preview
+```
 
-Add your screenshots here:
+---
 
+## 🖼️ Preview
+
+Preview del escritorio
+
+```bash
+preview.png
+```
+
+## 🙏 Credits
+
+This setup is inspired by:
+
+- https://github.com/FernuDev/Hypr-dotfiles
+
+Big thanks to FernuDev for the original configuration.
+
+
+```markdown
 ![desktop](preview.png)
-⚠️ Notes
+```
 
-Designed for Arch Linux.
+---
 
-Uses Nerd Fonts for icons.
+## ⚠️ Notes
 
-Waybar depends on custom scripts located in:
+- Designed for Arch Linux  
+- Uses Nerd Fonts for icons  
+- Waybar depends on custom scripts located in:
 
+```bash
 ~/.config/waybar/scripts/
+```
 
 Make sure scripts are executable:
 
+```bash
 chmod +x ~/.config/waybar/scripts/*.sh
-👤 Author
+```
+
+---
+
+## 👤 Author
 
 Alfredo Ramírez Candia
