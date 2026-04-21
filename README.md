@@ -85,6 +85,21 @@ yay -S pokemon-colorscripts-git
 yay -S hyprpaper wlogout paru pokemon-colorscripts-git
 ```
 
+### Nerd Fonts
+
+```bash
+# Clonar el repositorio (solo la fuente que necesitas, sin historial completo)
+git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts.git
+cd nerd-fonts
+
+# Instalar JetBrainsMono (la que usa este setup)
+git sparse-checkout add patched-fonts/JetBrainsMono
+./install.sh JetBrainsMono
+```
+
+> Si quieres otra fuente, reemplaza `JetBrainsMono` por el nombre de la carpeta en `patched-fonts/`.
+> Lista completa: https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
+
 ### Spotify (Flatpak)
 ```bash
 flatpak install flathub com.spotify.Client
