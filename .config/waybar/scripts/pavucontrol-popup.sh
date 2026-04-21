@@ -3,6 +3,7 @@
 VOL=$(pamixer --get-volume)
 
 yad --scale \
+  --class="float-volume" \
   --title="float-volume" \
   --value="$VOL" \
   --min-value=0 \
