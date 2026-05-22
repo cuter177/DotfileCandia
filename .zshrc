@@ -86,7 +86,7 @@ alias ls="eza -ha --icons=auto --sort=name --group-directories-first"
 alias pokemon="pokemon-colorscripts --no-title -n"
 alias fastfetch="~/.config/fastfetch/scripts/fastfetch-ramdom-logo.sh"
 alias nv="nvim"
-
+alias sameboyx='SDL_VIDEODRIVER=x11 sameboy --fullscreen'
 
 pokemon-colorscripts --no-title -r 1,2,3
 

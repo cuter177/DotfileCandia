@@ -9,9 +9,9 @@
 
     //Modules layout
 
-	"modules-left": ["custom/launcher", "cpu", "memory", "custom/bluetooth","hyprland/workspaces", "custom/cava"],
+	"modules-left": ["custom/launcher", "cpu", "memory", "custom/mic", "custom/bluetooth","hyprland/workspaces", "custom/cava"],
     "modules-center": ["custom/media"],
-    "modules-right": ["backlight","network", "pulseaudio", "battery", "clock", "custom/power"],
+    "modules-right": ["backlight","network", "pulseaudio", "custom/language","battery", "clock", "custom/power"],
 
 
 
@@ -127,7 +127,8 @@
       "exec": "~/.config/waybar/scripts/spotify-media.sh",
       "max-length": 40,
       "on-click": "~/.config/waybar/scripts/goto-spotify.sh",
-      "on-click-right": "playerctl -p spotify play-pause"
+      "on-click-right": "playerctl play-pause",
+      "on-click-middle": "playerctl next"
     },
 
 
@@ -157,5 +158,20 @@
       "exec": "~/.config/waybar/scripts/cava.sh",
       "return-type": "raw",
       "tooltip": false
+    },
+    "custom/language": {
+      "exec": "~/.config/waybar/scripts/keyboard-layout.sh",
+      "interval": 1,
+      "tooltip": false,
+      "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+    },
+    "custom/mic": {
+      "exec": "~/.config/waybar/scripts/mic-status.sh",
+      "interval": "once",
+      "signal": 2,
+      "return-type": "json",
+      "tooltip": false,
+      "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle && pkill -RTMIN+2 waybar"
     }
+    
 }

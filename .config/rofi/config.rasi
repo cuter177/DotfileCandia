@@ -1,0 +1,62 @@
+configuration {
+  font: "JetBrainsMono Nerd Font Mono 12";
+  show-icons: true;
+  icon-theme: "Papirus";
+  modi: "drun,run,window";
+  display-drun: " Apps:";
+  display-run: " Run:";
+  display-window: " Windows:";
+  sidebar-mode: false;
+  dpi: 100;
+  lines: 10;
+  columns: 1;
+  scrollbar: true;
+  terminal: "alacritty";
+}
+
+* {
+  background:       #000000;
+  background-alt:   #111111;
+  foreground:       #FFFFFF;
+  selected-normal-background: #333333;
+  selected-normal-foreground: #FFFFFF;
+  active-background: #666666;
+  active-foreground: #FFFFFF;
+  urgent-background: #FF0000;
+  urgent-foreground: #FFFFFF;
+  border-color:     #444444;
+  border-radius:    8px;
+  padding:          8px;
+}
+window {
+  background-color: #000000;
+  border: 2;
+  border-color: #444444;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+entry {
+  background-color: #000000;
+  text-color: #FFFFFF;
+  padding: 5px;
+}
+
+element {
+  background-color: #000000;
+  text-color: #000000;
+}
+
+element selected {
+  background-color: #333333;
+  text-color: #FFFFFF;
+}
+
+scrollbar {
+  handle-color: #444444;
+  background-color: #000000;
+}
+
+
+
+@theme "/usr/share/rofi/themes/rounded-purple-dark.rasi"

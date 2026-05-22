@@ -1,0 +1,46 @@
+* {
+  font: "JetBrainsMono Nerd Font 13";
+  background: #000000;
+  background-alt: #111111;
+  foreground: #ffffff;
+  selected-normal-background: #333333;
+  selected-normal-foreground: #ffffff;
+  border-color: #444444;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+window {
+  background-color: #000000;
+  border: 2;
+  border-color: #444444;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+mainbox {
+  background-color: #000000;
+  border: 0;
+}
+
+entry {
+  background-color: #000000;
+  text-color: #ffffff;
+  padding: 6px;
+}
+
+element {
+  background-color: #000000;
+  text-color: #ffffff;
+  padding: 5px;
+}
+
+element selected {
+  background-color: #333333;
+  text-color: #ffffff;
+}
+
+scrollbar {
+  handle-color: #555555;
+  background-color: #000000;
+}

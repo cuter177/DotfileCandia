@@ -70,8 +70,11 @@ return {
             "MunifTanjim/nui.nvim",
             "zbirenbaum/copilot.lua",
           },
-          opts = {
-            provider = "copilot",
-          },
+          config = function()
+            require("avante").setup({
+              provider = "copilot",
+            })
+            vim.api.nvim_create_user_command('Chat', 'AvanteAsk', {})
+          end,
         },
-}
+  }
