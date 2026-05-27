@@ -1,0 +1,68 @@
+window {
+    /* Fondo con desenfoque (si tu compositor lo soporta, ej. Hyprland/Wayfire) */
+    background: rgba(28, 28, 28, 0.75); 
+    border-radius: 16px;
+    /* Borde doble simulado con box-shadow para mayor finura */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    font-family: "SF Pro Display", "Inter", sans-serif;
+    font-size: 13px; /* Apple usa fuentes ligeramente más pequeñas y nítidas */
+}
+
+
+
+/* Contenedor principal */
+#outer-box {
+    margin: 12px;
+}
+
+/* Cada fila de red */
+#entry {
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 8px; /* Redondeado suave para los items */
+    transition: all 0.2s ease; /* Suaviza la selección */
+}
+
+/* Selección tipo macOS Blue */
+#entry:selected {
+    background: #007aff; /* El azul clásico de Apple */
+    color: #ffffff;
+}
+
+/* Si prefieres la selección gris sutil (Apple Dark) */
+/*
+#entry:selected {
+    background: rgba(255, 255, 255, 0.1);
+}
+*/
+
+/* Iconos de red */
+#img {
+    margin-right: 12px;
+    opacity: 0.9;
+}
+
+/* Texto de la red */
+#text {
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+/* Scrollbar invisible o muy fina (opcional) */
+#scroll {
+    margin-right: -4px;
+}
+#input {
+    margin: 8px 12px 12px 12px;
+    padding: 8px 10px;
+
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+
+    font-weight: 500;
+}
+
