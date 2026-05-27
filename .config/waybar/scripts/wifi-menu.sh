@@ -1,6 +1,4 @@
 #!/bin/bash
-LOG="$HOME/wifi_debug.log"
-echo "--- $(date) ---" > "$LOG"
 
 # obtener redes sin duplicados
 LIST=$(nmcli -t -f SSID,SECURITY,SIGNAL device wifi list | awk -F: '$1!="" && !seen[$1]++')
@@ -15,7 +13,6 @@ SSID=$(echo "$MENU" | wofi --show dmenu -p "Seleccionar WiFi" --lines 10)
 [ -z "$SSID" ] && exit
 
 SSID=$(echo "$SSID" | awk '{print $1}')
-echo "SSID: $SSID" >> "$LOG"
 
 # intentar conectar primero (por si ya está guardada)
 nmcli device wifi connect "$SSID" &> /dev/null
@@ -26,10 +23,9 @@ fi
 
 sleep 0.2
 
-# pedir contraseña
-GTK_THEME=Breeze:dark \
+PASS=$(GTK_THEME=Breeze:dark \
     yad --entry --hide-text \
-    --title="" \
+    --title="yad_wifi" \
     --text="🔒 Contraseña para $SSID" \
     --button="Conectar:0" \
     --button="Cancelar:1" \
@@ -38,19 +34,9 @@ GTK_THEME=Breeze:dark \
     --fixed \
     --undecorated \
     --borders=24 \
-    --gtkrc="$HOME/.config/gtk-3.0/yad-wifi.css" > /tmp/yad-wifi-pass 2>/dev/null &
-
-YAD_PID=$!
-sleep 0.3
-hyprctl dispatch focuswindow pid:$YAD_PID
-hyprctl dispatch moveactive exact 900 20
-
-wait $YAD_PID
-PASS=$(cat /tmp/yad-wifi-pass | tr -d '\n')
-rm -f /tmp/yad-wifi-pass
+    --gtkrc="$HOME/.config/gtk-3.0/yad-wifi.css" 2>/dev/null)
 
 [ -z "$PASS" ] && exit
-echo "Password ingresado" >> "$LOG"
 
 nmcli device wifi connect "$SSID" password "$PASS"
 if [ $? -eq 0 ]; then
