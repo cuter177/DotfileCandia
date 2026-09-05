@@ -1,5 +1,5 @@
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="/home/candia/.cache/.bun/bin:$PATH"
+[[ -d "$HOME/.cache/.bun/bin" ]] && export PATH="$HOME/.cache/.bun/bin:$PATH"
 ZSH_THEME="afowler"
 
 plugins=(
@@ -81,26 +81,42 @@ actpy() {
   source ~/venvs/pyopengl-env/bin/activate
 }
 
-alias l="eza -lh --icons=auto"
-alias ls="eza -ha --icons=auto --sort=name --group-directories-first"
-alias pokemon="pokemon-colorscripts --no-title -n"
-alias fastfetch="~/.config/fastfetch/scripts/fastfetch-ramdom-logo.sh"
+if command -v eza >/dev/null 2>&1; then
+  alias l="eza -lh --icons=auto"
+  alias ls="eza -ha --icons=auto --sort=name --group-directories-first"
+fi
+
+if command -v pokemon-colorscripts >/dev/null 2>&1; then
+  alias pokemon="pokemon-colorscripts --no-title -n"
+  pokemon-colorscripts --no-title -r 1,2,3
+fi
+
+if [[ -x "$HOME/.config/fastfetch/scripts/fastfetch-ramdom-logo.sh" ]]; then
+  alias fastfetch="$HOME/.config/fastfetch/scripts/fastfetch-ramdom-logo.sh"
+fi
+
 alias nv="nvim"
-alias zen='~/.tarball-installations/zen/zen &'
 
-
-pokemon-colorscripts --no-title -r 1,2,3
-
-
+if command -v zen-browser >/dev/null 2>&1; then
+  alias zen='zen-browser &'
+elif command -v zen >/dev/null 2>&1; then
+  alias zen='zen &'
+elif [[ -x "$HOME/.tarball-installations/zen/zen" ]]; then
+  alias zen='$HOME/.tarball-installations/zen/zen &'
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 #eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-export PATH="$PATH:/opt/mssql-tools/bin"
+[[ -d /opt/mssql-tools/bin ]] && export PATH="$PATH:/opt/mssql-tools/bin"
 export PATH="$HOME/.local/bin:$PATH"
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-export ANDROID_HOME=/opt/android-sdk
-export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+if [[ -d "$HOME/Android/Sdk" ]]; then
+  export ANDROID_HOME=$HOME/Android/Sdk
+  export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+fi
+[[ -d /usr/lib/jvm/java-17-openjdk ]] && export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+if [[ -d /opt/android-sdk ]]; then
+  export ANDROID_HOME=/opt/android-sdk
+  export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+fi

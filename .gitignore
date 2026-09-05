@@ -1,2 +1,4 @@
-#scritp de sincronización date archivo de configuración
-sync-dotfiles.sh
+# Backups and editor leftovers
+*.bak
+*.save
+.config/waybar/backups/
