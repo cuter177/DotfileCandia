@@ -1,5 +1,5 @@
 export ZSH="$HOME/.oh-my-zsh"
-
+export PATH="/home/candia/.cache/.bun/bin:$PATH"
 ZSH_THEME="afowler"
 
 plugins=(
@@ -86,7 +86,8 @@ alias ls="eza -ha --icons=auto --sort=name --group-directories-first"
 alias pokemon="pokemon-colorscripts --no-title -n"
 alias fastfetch="~/.config/fastfetch/scripts/fastfetch-ramdom-logo.sh"
 alias nv="nvim"
-alias sameboyx='SDL_VIDEODRIVER=x11 sameboy --fullscreen'
+alias zen='~/.tarball-installations/zen/zen &'
+
 
 pokemon-colorscripts --no-title -r 1,2,3
 
@@ -95,4 +96,11 @@ pokemon-colorscripts --no-title -r 1,2,3
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export PATH="$PATH:/opt/mssql-tools/bin"
+export PATH="$HOME/.local/bin:$PATH"
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export ANDROID_HOME=/opt/android-sdk
+export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools

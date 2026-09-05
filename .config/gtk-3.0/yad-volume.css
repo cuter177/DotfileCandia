@@ -1,0 +1,30 @@
+window {
+    background-color: rgba(28, 28, 28, 0.85);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+scale {
+    padding: 8px 12px;
+}
+
+scale trough {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    min-height: 4px;
+}
+
+scale highlight {
+    background-color: #ffffff;
+    border-radius: 6px;
+    min-height: 4px;
+}
+
+scale slider {
+    background-color: #ffffff;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+    border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}

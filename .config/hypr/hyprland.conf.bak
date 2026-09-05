@@ -8,7 +8,7 @@
 # You can split this configuration into multiple files
 # Create your files separately and then link them to this file like this:
 # source = ~/.config/hypr/myColors.conf
-
+source = ~/.config/hypr/waydroid-mode.conf
 
 ################
 ### MONITORS ###
@@ -29,7 +29,9 @@ monitor = DP-1, 1920x1080@144, 0x0, 1
 $terminal = kitty
 $fileManager = dolphin
 $menu = wofi -show drun
-$browser = firefox
+$browser = ~/.tarball-installations/zen/zen
+$mail = thunderbird
+$music = flatpak run com.spotify.Client --force-device-scale-factor=0.9
 
 #################
 ### AUTOSTART ###
@@ -40,16 +42,15 @@ $browser = firefox
 
 # exec-once = $terminal
 # exec-once = nm-applet &
-# exec-once = waybar & hyprpaper & firefox
-exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-exec-once = xdg-desktop-portal-hyprland &
-exec-once = dbus-update-activation-environment --systemd --all # for XDPH
-exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP # for XDPH
+# exec-once = waybar & hyprpaper & firefoxexec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec-once = dbus-update-activation-environment --systemd --all
+exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+#exec-once = xdg-desktop-portal-hyprland &
 exec-once = swww-daemon
 exec-once = hyprctl setcursor Bibata-Modern-Ice 12
-exec-once = ./monitorea-fondo.sh  
-
-
+exec-once = sleep 2 && waybar
+exec-once = bash -c 'sleep 6 && ~/.config/waybar/scripts/monitorea-fondo.sh'
+exec-once = mako
 
 #############################
 ### ENVIRONMENT VARIABLES ###
@@ -58,21 +59,20 @@ exec-once = ./monitorea-fondo.sh
 # See https://wiki.hyprland.org/Configuring/Environment-variables/
 
 # Some default env vars.
-env = XCURSOR_SIZE,24
+env = HYPRCURSOR_THEME,Bibata-Modern-Classic
+env = HYPRCURSOR_SIZE,24
 env = XDG_CURRENT_DESKTOP,Hyprland
 env = XDG_SESSION_TYPE,wayland
-env = XDG_SESSION_DESKTOP,Hyprland
 
 env = QT_QPA_PLATFORM,wayland;xcb
 env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
 env = QT_AUTO_SCREEN_SCALE_FACTOR,0
 env = QT_QPA_PLATFORMTHEME,qt6ct
-env = LIBVA_DRIVER_NAME,nvidia
-env = GMB_BACKEND,nvidia-drm
+#env = LIBVA_DRIVER_NAME,nvidia
+#env = GMB_BACKEND,nvidia-drm
 env = XDG_SESSION_TYPE,wayland
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WRL_NO_HARDWARE_CURSORS,1
-
+#env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+env = WLR_NO_HARDWARE_CURSORS,1
 # Electron apps
 env = ELECTRON_OZONE_PLATFORM_HINT, auto
 
@@ -104,8 +104,8 @@ env = MOZ_ENABLE_WAYLAND,1
 
 # https://wiki.hyprland.org/Configuring/Variables/#general
 general {
-    gaps_in = 2
-    gaps_out = 4
+    gaps_in = 0
+    gaps_out = 0
     border_size = 0
 
     # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
@@ -142,7 +142,7 @@ decoration {
     # https://wiki.hyprland.org/Configuring/Variables/#blur
     blur {
         enabled = false
-        size = 2
+        size = 8
         passes = 1
 
         vibrancy = 0.1696
@@ -189,9 +189,10 @@ animations {
 # windowrule = bordersize 0, floating:0, onworkspace:f[1]
 # windowrule = rounding 0, floating:0, onworkspace:f[1]
 
+
 # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
 dwindle {
-    pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    #pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
     preserve_split = true # You probably want this
 }
 
@@ -223,6 +224,7 @@ input {
 
     sensitivity = 0.0
     accel_profile = pointer
+    numlock_by_default = true
 
    touchpad {
         disable_while_typing = false
@@ -264,9 +266,10 @@ bind = $mainMod, E, exec, $fileManager
 bind = $mainMod, V, togglefloating,
 bind = $mainMod, R, exec, rofi -show drun
 bind = $mainMod, P, pseudo, # dwindle
-bind = $mainMod, J, togglesplit, # dwindle
+bind = $mainMod, J, layoutmsg, togglesplit
 bind = $mainMod, F, exec, $browser
-bind = $mainMod, slash, exec, env GDK_BACKEND=x11 QT_QPA_PLATFORM=xcb ELECTRON_OZONE_PLATFORM_HINT=x11 flatpak run com.spotify.Client --force-device-scale-factor=1.0
+bind = $mainMod, slash, exec, $music
+bind = $mainMod, C, exec, $mail
 
 
 # Move focus with mainMod + arrow keyss
@@ -286,7 +289,6 @@ bind = $mainMod, 7, workspace, 7
 bind = $mainMod, 8, workspace, 8
 bind = $mainMod, 9, workspace, 9
 bind = $mainMod, 0, workspace, 10
-
 # Cambiar de workspace uno por uno con Tab + Flechas
 bind = $mainMod, left, workspace, e-1
 bind = $mainMod, right, workspace, e+1
@@ -306,8 +308,6 @@ bind = $mainMod SHIFT, 0, movetoworkspace, 10
 
 # Example special workspace (scratchpad)
 bind = $mainMod, S, togglespecialworkspace, magic
-bind = $mainMod SHIFT, S, movetoworkspace, special:magic
-
 # Scroll through existing workspaces with mainMod + scroll
 bind = $mainMod, mouse_down, workspace, e+1
 bind = $mainMod, mouse_up, workspace, e-1
@@ -316,8 +316,9 @@ bind = $mainMod, mouse_up, workspace, e-1
 bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
 
-bind = $mainMod,TAB,exec,grim -g "$(slurp)"  /home/candia/Imágenes/ScreenShots/screenshot_$(date +%Y%m%d_%H%M%S).png
+#bind = $mainMod,TAB,exec,grim -g "$(slurp)"  /home/candia/Imágenes/ScreenShots/screenshot_$(date +%Y%m%d_%H%M%S).png
 #/home/candia/ModRed/imap2/screenshot_$(date +%Y%m%d_%H%M%S).png
+bind = $mainMod,TAB,exec,bash -c 'mkdir -p ~/screen && n=$(ls ~/screen/*.png 2>/dev/null | xargs -I{} basename {} .png | grep -E "^[0-9]+$" | sort -n | tail -1) && grim -g "$(slurp)" ~/screen/$((${n:-0}+1)).png'
 
 # Laptop multimedia keys for volume and LCD brightness
 bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
@@ -338,3 +339,58 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 ##############################
 # Solución para XWayland
 windowrule = match:xwayland true, no_initial_focus on
+
+bind = $mainMod, I, fullscreen, 1 # Maximizado tipo "monóculo"
+
+#windowrule {
+ #   name = firefox-monocle
+  #  match:class = ^(firefox)$
+   #fullscreen_state = 1 0
+#}
+
+windowrule {
+    name = float-calendar
+    match:title = float-calendar
+
+    float = true
+    move = 1020 30
+    border_size = 0
+}
+
+windowrule {
+    name = float-volume
+    match:title = float-volume
+
+    float = true
+      move = 990 30
+    border_size = 0
+}
+
+windowrule {
+    name = float-brightness
+    match:title = float-brightness
+
+    float = true
+      move = 920 30
+    border_size = 0
+}
+
+windowrule {
+    name = wifi-popup
+    match:title = networkmanager_dmenu
+
+    float = true
+    move = 1500 40
+    size = 420 500
+}
+
+windowrule {
+    name = yad_wifi
+    match:title = yad_wifi
+    float = true
+    move = 900 45
+    size = 380 130
+    border_size = 0
+}
+
+

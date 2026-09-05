@@ -3,7 +3,8 @@
 STATE=$(bluetoothctl show | grep Powered | awk '{print $2}')
 
 if [ "$STATE" = "yes" ]; then
-    echo '{"text": "󰂯", "class": "active"}'
+    echo "󰂯"
 else
-    echo '{"text": "󰂲", "class": "inactive"}'
+    echo "󰂲"
 fi
+

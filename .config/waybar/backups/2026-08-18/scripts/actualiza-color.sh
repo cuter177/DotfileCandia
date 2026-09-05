@@ -2,7 +2,7 @@
 
 USER_HOME="/home/candia"
 CACHE="$USER_HOME/.cache/swww/eDP-1"
-COLORS="$USER_HOME/.config/waybar/colors.css"
+STYLE="$USER_HOME/.config/waybar/style.css"
 
 # ─────────────────────────────────────────────
 # Leer fondo actual
@@ -18,16 +18,33 @@ COLOR=$(magick "$WALL" -resize 1x1 txt:- \
   | grep -o '#[A-Fa-f0-9]\{6\}' | head -n1)
 [[ -z "$COLOR" ]] && exit 1
 
-# ─────────────────────────────────────────────
-# Actualizar solo el token accent
-# ─────────────────────────────────────────────
-if grep -q '@define-color accent' "$COLORS"; then
-  sed -i "s/@define-color accent .*/@define-color accent $COLOR;/" "$COLORS"
-else
-  echo "@define-color accent $COLOR;" >> "$COLORS"
-fi
 
+MODULES_background=(
+  "#backlight"
+  "#custom-media"
+  "#custom-media.playing"
+)
+
+MODULES_color=(
+  "#network"
+  "#custom-launcher"
+  "#custom-bluetooth"
+  "#custom-cava"
+)
+
+for MOD in "${MODULES_background[@]}"; do
+  perl -0777 -i -pe "
+    s/($MOD\s*\\{[^}]*background:\s*)#[0-9a-fA-F]{6,8}/\$1$COLOR/s
+  " "$STYLE"
+done
+
+for MOD in "${MODULES_color[@]}"; do
+  perl -0777 -i -pe "
+    s/($MOD\s*\\{[^}]*color:\s*)#[0-9a-fA-F]{6,8}/\$1$COLOR/s
+  " "$STYLE"
+done
 # ─────────────────────────────────────────────
 # Recargar Waybar
 # ─────────────────────────────────────────────
 pkill -USR2 waybar
+

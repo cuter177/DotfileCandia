@@ -1,0 +1,5 @@
+windowrule {
+    name = waydroid
+    match:title = Waydroid
+    size = 426 720
+}
