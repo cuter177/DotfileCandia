@@ -157,6 +157,7 @@
       "exec": "~/.config/waybar/scripts/cava.sh",
       "return-type": "raw",
       "tooltip": false,
+      "hide-empty-text": true,
       "restart-interval": 1
     },
     "custom/language": {
