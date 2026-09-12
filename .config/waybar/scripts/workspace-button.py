@@ -5,16 +5,35 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
+from pathlib import Path
 
 WS_ID = int(sys.argv[1])
 
+
+def define_color(name: str, fallback: str) -> str:
+    css = Path(__file__).resolve().parent.parent / "colors.css"
+    try:
+        match = re.search(
+            rf"@define-color\s+{re.escape(name)}\s+(\S+)\s*;",
+            css.read_text(),
+        )
+    except OSError:
+        return fallback
+    return match.group(1) if match else fallback
+
+
+MAGENTA = define_color("magenta", "#bb9af7")
+BLUE = define_color("blue", "#7aa2f7")
+ORANGE = define_color("orange", "#e0af68")
+
 ICONS = {
-    "active": "<span font='11'>󰮯</span>",
-    "empty": "<span font='10'><span font='7'></span></span>",
-    "persistent": "<span font='10'>󰊠</span>",
+    "active": f"<span font='11' color='{ORANGE}'>󰮯</span>",
+    "empty": f"<span font='10'><span font='7' color='{MAGENTA}'></span></span>",
+    "persistent": f"<span font='10' color='{BLUE}'>󰊠</span>",
 }
 
 INTERESTING = (

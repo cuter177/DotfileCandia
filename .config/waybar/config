@@ -11,9 +11,9 @@
     "modules-center": ["group/center"],
     "modules-right": ["group/right"],
 
-    "group/left": {
+   "group/left": {
         "orientation": "horizontal",
-        "modules": ["cpu", "memory", "custom/mic", "custom/bluetooth", "group/workspaces", "custom/cava"]
+        "modules": ["cpu", "memory", "group/workspaces", "custom/cava"]
     },
     "group/center": {
         "orientation": "horizontal",
@@ -21,7 +21,7 @@
     },
     "group/right": {
         "orientation": "horizontal",
-        "modules": ["group/rings", "network", "custom/language", "clock", "custom/power"]
+        "modules": ["group/rings", "custom/mic", "custom/bluetooth","network", "hyprland/language", "clock", "custom/power"]
     },
     "group/rings": {
         "orientation": "horizontal",
@@ -31,7 +31,7 @@
     "custom/volume": {
         "exec": "~/.config/waybar/scripts/ring-status.py volume",
         "return-type": "json",
-        "interval": 1,
+        "interval": 5,
         "signal": 8,
         "format": "{}",
         "hide-empty-text": false,
@@ -43,7 +43,7 @@
     "custom/brightness": {
         "exec": "~/.config/waybar/scripts/ring-status.py brightness",
         "return-type": "json",
-        "interval": 1,
+        "interval": 5,
         "signal": 9,
         "format": "{}",
         "hide-empty-text": false,
@@ -55,7 +55,7 @@
     "custom/battery": {
         "exec": "~/.config/waybar/scripts/ring-status.py battery",
         "return-type": "json",
-        "interval": 5,
+        "interval": 20,
         "format": "{}",
         "hide-empty-text": false,
         "tooltip": true
@@ -100,6 +100,10 @@
         "restart-interval": 1,
         "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 6 })'"
     },
+    "hyprland/language": {
+        "format": "󰌌 {short}",
+        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+    },
     "network": {
         "format-wifi": " {signalStrength}%",
         "format-ethernet": "󰈁",
@@ -138,12 +142,12 @@
 
     "disk": {
         "format": " {used}",
-        "interval": 1,
+        "interval": 60,
         "id": "system-info-disk"
     },
 
     "custom/media": {
-        "interval": 5,
+        "interval": 8,
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/spotify-media.sh",
         "max-length": 40,
@@ -171,7 +175,7 @@
     "custom/bluetooth": {
         "exec": "~/.config/waybar/scripts/bluetooth-status.sh",
         "return-type": "json",
-        "interval": 10,
+        "interval": 30,
         "on-click": "blueman-manager"
     },
     "custom/cava": {
@@ -179,13 +183,7 @@
         "return-type": "raw",
         "tooltip": false,
         "hide-empty-text": true,
-        "restart-interval": 1
-    },
-    "custom/language": {
-        "exec": "~/.config/waybar/scripts/keyboard-layout.sh",
-        "interval": 1,
-        "tooltip": false,
-        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+        "restart-interval": 3
     },
     "custom/mic": {
         "exec": "~/.config/waybar/scripts/mic-status.sh",

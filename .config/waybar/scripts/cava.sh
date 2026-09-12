@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FIFO="/tmp/cava.fifo"
+FIFO="/tmp/cava-waybar.fifo"
 LOCK="/tmp/cava-waybar.lock"
+CONF="$HOME/.config/waybar/cava.ini"
 bars=("▁" "▂" "▃" "▄" "▅" "▆" "▇" "█")
+BAR_COUNT="$(awk -F= '/^[[:space:]]*bars[[:space:]]*=/{gsub(/[[:space:]]/,"",$2); print $2; exit}' "$CONF" 2>/dev/null || true)"
+BAR_COUNT="${BAR_COUNT:-8}"
+IDLE_BARS="$(printf '▁%.0s' $(seq 1 "$BAR_COUNT"))"
 
 idle() {
   exec sleep infinity
@@ -32,24 +36,30 @@ if ! is_primary_bar; then
 fi
 
 exec 9>"$LOCK"
-if ! flock -n 9; then
-  exec 9>&-
-  idle
-fi
+# Wait out the previous instance instead of sleeping forever with no output.
+# A reload overlap used to take this path, and hide-empty-text hid the module.
+flock 9
 
 CAVA_PID=""
 cleanup() {
+  trap - EXIT TERM INT
   if [[ -n "${CAVA_PID:-}" ]]; then
     kill "$CAVA_PID" 2>/dev/null || true
     wait "$CAVA_PID" 2>/dev/null || true
   fi
+  pkill -f "cava -p ${CONF}" 2>/dev/null || true
 }
-trap cleanup EXIT
+trap cleanup EXIT TERM INT
+
+pkill -f "cava -p ${CONF}" 2>/dev/null || true
 
 rm -f "$FIFO"
 mkfifo "$FIFO"
 
-cava >/dev/null 2>&1 &
+# Keep a read-write fd so the reader never blocks on open if cava is slow.
+exec 8<>"$FIFO"
+
+cava -p "$CONF" >/dev/null 2>&1 &
 CAVA_PID=$!
 
 while IFS= read -r line; do
@@ -66,6 +76,6 @@ while IFS= read -r line; do
     output+="${bars[$v]}"
   done
 
-  [[ -z "$output" ]] && output="▁▁▁▁▁▁▁▁"
+  [[ -z "$output" ]] && output="$IDLE_BARS"
   printf '%s\n' "$output"
-done < "$FIFO"
+done <&8

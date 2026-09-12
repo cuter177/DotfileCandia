@@ -130,19 +130,20 @@ def battery() -> None:
     discharging = status == "Discharging"
     charging = status == "Charging"
     plugged = status in ("Charging", "Full", "Not charging")
+    low_pct = 20
 
     if charging:
         classes.append("charging")
         state = "cargando"
-    elif plugged:
-        classes.append("plugged")
-        state = "conectado"
+    elif cap <= low_pct:
+        classes.append("low")
+        state = "baja"
     else:
-        state = "descargando"
-        if cap <= 10:
-            classes.append("critical")
-        elif cap <= 30:
-            classes.append("warning")
+        classes.append("high")
+        state = "sin cargar"
+
+    if plugged and not charging:
+        classes.append("plugged")
 
     tooltip = f"Batería {cap}% ({state})"
     remaining = _battery_time(bat, status)

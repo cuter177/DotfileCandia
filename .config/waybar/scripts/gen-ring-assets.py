@@ -21,8 +21,9 @@ COLORS = {
     "blue": "#7aa2f7",
     "orange": "#e0af68",
     "green": "#9ece6a",
-    "red": "#f7768e",
     "muted": "#565f89",
+    "white": "#f1f1f1",
+    "crimson": "#DC143C",
 }
 
 TRACK = (0x56 / 255, 0x5F / 255, 0x89 / 255, 0.42)
@@ -92,8 +93,8 @@ def main() -> None:
         "#custom-brightness { color: transparent; }",
         "#custom-battery { color: transparent; }",
         "#custom-volume.muted { color: transparent; }",
-        "#custom-battery.warning { color: transparent; }",
-        "#custom-battery.critical { color: transparent; }",
+        "#custom-battery.high { color: transparent; }",
+        "#custom-battery.low { color: transparent; }",
         "#custom-battery.charging,",
         "#custom-battery.plugged { color: transparent; }",
         "",
@@ -103,9 +104,9 @@ def main() -> None:
         "	opacity: 0.8;",
         "}",
         "",
-        "#custom-battery.critical:not(.charging):not(.plugged) {",
-        "	animation: blink 0.5s linear infinite alternate;",
-        "}",
+        "#custom-battery.low:not(.charging) {",
+            "	animation: blink 0.5s linear infinite alternate;",
+            "}",
         "",
     ]
 
@@ -120,9 +121,11 @@ def main() -> None:
     rules("#custom-volume", "blue")
     rules("#custom-volume", "muted", extra=".muted")
     rules("#custom-brightness", "orange")
-    rules("#custom-battery", "green")
-    rules("#custom-battery", "orange", extra=".warning")
-    rules("#custom-battery", "red", extra=".critical")
+    rules("#custom-battery", "white")
+    rules("#custom-battery", "white", extra=".high")
+    rules("#custom-battery", "white", extra=".plugged")
+    rules("#custom-battery", "green", extra=".charging")
+    rules("#custom-battery", "crimson", extra=".low")
 
     CSS_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Wrote {len(list(ASSETS.glob('*.png')))} PNGs to {ASSETS}")

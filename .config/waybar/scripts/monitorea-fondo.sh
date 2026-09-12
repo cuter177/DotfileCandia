@@ -26,7 +26,14 @@ if ! command -v inotifywait &> /dev/null; then
   exit 1
 fi
 
-WATCHFILE=$(resolve_swww_cache)
+WATCHFILE=""
+for _ in $(seq 1 40); do
+  WATCHFILE=$(resolve_swww_cache) || true
+  if [[ -n "$WATCHFILE" && -f "$WATCHFILE" ]]; then
+    break
+  fi
+  sleep 0.25
+done
 if [[ -z "$WATCHFILE" || ! -f "$WATCHFILE" ]]; then
   echo "No hay cache de swww en $CACHE_DIR"
   exit 1

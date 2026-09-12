@@ -30,14 +30,11 @@ local music = "flatpak run com.spotify.Client --force-device-scale-factor=0.9"
 -----------------
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-    hl.exec_cmd("dbus-update-activation-environment --systemd --all")
-    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-    -- hl.exec_cmd("xdg-desktop-portal-hyprland")
+    -- UWSM already exports the Wayland session environment.
     hl.exec_cmd("swww-daemon")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 12")
-    hl.exec_cmd("sleep 2 && waybar")
-    hl.exec_cmd("sleep 6 && ~/.config/waybar/scripts/monitorea-fondo.sh")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("~/.config/waybar/scripts/monitorea-fondo.sh")
     hl.exec_cmd("mako")
 end)
 
@@ -54,11 +51,6 @@ hl.env("QT_QPA_PLATFORM", "wayland;xcb")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 hl.env("QT_AUTO_SCREEN_SCALE_FACTOR", "0")
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
--- hl.env("LIBVA_DRIVER_NAME", "nvidia")
--- hl.env("GMB_BACKEND", "nvidia-drm")
-hl.env("XDG_SESSION_TYPE", "wayland")
--- hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-hl.env("WLR_NO_HARDWARE_CURSORS", "1")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
 
@@ -106,9 +98,9 @@ hl.config({
 
         shadow = {
             enabled = true,
-            range = 50,
-            render_power = 9,
-            color = "rgba(0,0,0,0.6)",
+            range = 12,
+            render_power = 2,
+            color = "rgba(0,0,0,0.45)",
         },
 
         blur = {
@@ -172,7 +164,8 @@ hl.config({
     },
     misc = {
         force_default_wallpaper = -1,
-        disable_hyprland_logo = false,
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
     },
 })
 
@@ -203,6 +196,9 @@ hl.config({
 
     xwayland = {
         force_zero_scaling = true,
+    },
+    cursor = {
+        no_hardware_cursors = false,
     },
 })
 
@@ -256,12 +252,12 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 hl.bind(mainMod .. " + TAB", hl.dsp.exec_cmd([[bash -c 'mkdir -p ~/screen && n=$(ls ~/screen/*.png 2>/dev/null | xargs -I{} basename {} .png | grep -E "^[0-9]+$" | sort -n | tail -1) && grim -g "$(slurp)" ~/screen/$((${n:-0}+1)).png']]))
 
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true, repeating = true })
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ && pkill -RTMIN+8 waybar"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && pkill -RTMIN+8 waybar"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && pkill -RTMIN+8 waybar"), { locked = true, repeating = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && pkill -RTMIN+2 waybar"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+ && pkill -RTMIN+9 waybar"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%- && pkill -RTMIN+9 waybar"), { locked = true, repeating = true })
 
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
@@ -281,27 +277,48 @@ hl.window_rule({
 })
 
 hl.window_rule({
+    name = "tiled-no-shadow",
+    match = { float = false },
+    no_shadow = true,
+})
+
+-- Yad reports class "yad" on Wayland (--class does not change app_id).
+-- Static move/size only match initial title, so anchor titles with ^.
+-- Cursor-relative move keeps popups under the Waybar module you clicked.
+-- For a fixed pixel position, use e.g. move = { 1500, 30 }.
+local under_module = { "cursor_x-(window_w*0.5)", "4" }
+
+hl.window_rule({
     name = "float-calendar",
-    match = { title = "float-calendar" },
+    match = { class = "^yad$", title = "^float-calendar$" },
     float = true,
-    move = { 1020, 30 },
+    pin = true,
+    no_anim = true,
     border_size = 0,
+    size = { 80, 210 },
+    move = under_module,
 })
 
 hl.window_rule({
     name = "float-volume",
-    match = { title = "float-volume" },
+    match = { class = "^yad$", title = "^float-volume$" },
     float = true,
-    move = { 990, 30 },
+    pin = true,
+    no_anim = true,
     border_size = 0,
+    size = { 53, 160 },
+    move = under_module,
 })
 
 hl.window_rule({
     name = "float-brightness",
-    match = { title = "float-brightness" },
+    match = { class = "^yad$", title = "^float-brightness$" },
     float = true,
-    move = { 920, 30 },
+    pin = true,
+    no_anim = true,
     border_size = 0,
+    size = { 150, 80},
+    move = under_module,
 })
 
 hl.window_rule({
@@ -313,10 +330,12 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name = "yad_wifi",
-    match = { title = "yad_wifi" },
+    name = "wifi-password",
+    match = { class = "^(yad|wifi-password)$", title = "^wifi-password$" },
     float = true,
-    move = { 900, 45 },
-    size = { 380, 130 },
+    pin = true,
+    no_anim = true,
     border_size = 0,
+    size = { 400, 180 },
+    move = under_module,
 })

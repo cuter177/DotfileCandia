@@ -91,7 +91,7 @@ class PasswordDialog(Gtk.Window):
         self.set_skip_taskbar_hint(True)
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_default_size(400, 180)
-        self.set_position(Gtk.WindowPosition.CENTER)
+        # Let Hyprland window rules place this; CENTER fights `move`.
         self.password: str | None = None
 
         provider = Gtk.CssProvider()
