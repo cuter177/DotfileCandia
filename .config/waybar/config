@@ -21,18 +21,44 @@
     },
     "group/right": {
         "orientation": "horizontal",
-        "modules": ["backlight", "network", "pulseaudio", "custom/language", "battery", "clock", "custom/power"]
+        "modules": ["group/rings", "network", "custom/language", "clock", "custom/power"]
+    },
+    "group/rings": {
+        "orientation": "horizontal",
+        "modules": ["custom/brightness", "custom/volume", "custom/battery"]
     },
 
-    "pulseaudio": {
-        "tooltip": false,
-        "scroll-step": 5,
-        "format": "{icon} {volume}%",
-        "format-muted": "{icon} {volume}%",
+    "custom/volume": {
+        "exec": "~/.config/waybar/scripts/ring-status.py volume",
+        "return-type": "json",
+        "interval": 1,
+        "signal": 8,
+        "format": "{}",
+        "hide-empty-text": false,
+        "tooltip": true,
         "on-click": "~/.config/waybar/scripts/pavucontrol-popup.sh",
-        "format-icons": {
-            "default": ["", "", ""]
-        }
+        "on-scroll-up": "pamixer -i 5 && pkill -RTMIN+8 waybar",
+        "on-scroll-down": "pamixer -d 5 && pkill -RTMIN+8 waybar"
+    },
+    "custom/brightness": {
+        "exec": "~/.config/waybar/scripts/ring-status.py brightness",
+        "return-type": "json",
+        "interval": 1,
+        "signal": 9,
+        "format": "{}",
+        "hide-empty-text": false,
+        "tooltip": true,
+        "on-click": "~/.config/waybar/scripts/brightness-popup.sh",
+        "on-scroll-up": "brightnessctl set +5% && pkill -RTMIN+9 waybar",
+        "on-scroll-down": "brightnessctl set 5%- && pkill -RTMIN+9 waybar"
+    },
+    "custom/battery": {
+        "exec": "~/.config/waybar/scripts/ring-status.py battery",
+        "return-type": "json",
+        "interval": 5,
+        "format": "{}",
+        "hide-empty-text": false,
+        "tooltip": true
     },
     "group/workspaces": {
         "orientation": "horizontal",
@@ -80,27 +106,6 @@
         "format-disconnected": "",
         "tooltip": true,
         "on-click": "~/.config/waybar/scripts/wifi-menu.sh"
-    },
-
-    "backlight": {
-        "tooltip": false,
-        "format": "󰖨 {}%",
-        "interval": 1,
-        "on-scroll-up": "light -A 5",
-        "on-scroll-down": "light -U 5",
-        "on-click": "~/.config/waybar/scripts/brightness-popup.sh"
-    },
-    "battery": {
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 10
-        },
-        "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", ""]
     },
 
     "clock": {

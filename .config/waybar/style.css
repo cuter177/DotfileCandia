@@ -1,4 +1,5 @@
 @import "colors.css";
+@import "rings.css";
 
 * {
 	border: none;
@@ -41,13 +42,16 @@ window#waybar.hidden {
 	margin-right: 6px;
 }
 
+#group-rings {
+	background: transparent;
+	margin: 0 6px 0 2px;
+	padding: 0;
+}
+
 #cpu,
 #memory,
 #disk,
 #network,
-#pulseaudio,
-#battery,
-#backlight,
 #clock,
 #custom-mic,
 #custom-bluetooth,
@@ -67,9 +71,6 @@ window#waybar.hidden {
 #cpu:hover,
 #memory:hover,
 #network:hover,
-#pulseaudio:hover,
-#battery:hover,
-#backlight:hover,
 #clock:hover,
 #custom-mic:hover,
 #custom-bluetooth:hover,
@@ -98,14 +99,6 @@ window#waybar.hidden {
 
 #network {
 	color: @accent;
-}
-
-#pulseaudio {
-	color: @blue;
-}
-
-#backlight {
-	color: @orange;
 }
 
 #clock {
@@ -209,24 +202,6 @@ window#waybar.hidden {
 	100% { opacity: 1; }
 }
 
-#battery {
-	color: @green;
-}
-
-#battery.warning:not(.charging) {
-	color: @orange;
-}
-
-#battery.critical:not(.charging) {
-	color: @red;
-	animation: blink 0.5s linear infinite alternate;
-}
-
-#battery.charging,
-#battery.plugged {
-	color: @green;
-}
-
 @keyframes blink {
-	to { color: @muted; }
+	to { opacity: 0.35; }
 }

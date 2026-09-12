@@ -1,0 +1,15 @@
+width=380
+height=360
+location=top_right
+xoffset=-8
+yoffset=8
+allow_images=false
+hide_search=false
+insensitive=true
+hide_scroll=false
+prompt=Wi-Fi
+normal_window=false
+layer=overlay
+dynamic_lines=false
+allow_markup=false
+no_actions=true
