@@ -163,8 +163,9 @@
     "custom/language": {
       "exec": "~/.config/waybar/scripts/keyboard-layout.sh",
       "interval": 1,
+      "signal": 3,
       "tooltip": false,
-      "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+      "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next && pkill -RTMIN+3 waybar"
     },
     "custom/mic": {
       "exec": "~/.config/waybar/scripts/mic-status.sh",

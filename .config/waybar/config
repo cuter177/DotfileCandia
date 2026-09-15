@@ -21,7 +21,7 @@
     },
     "group/right": {
         "orientation": "horizontal",
-        "modules": ["group/rings", "custom/mic", "custom/bluetooth","network", "hyprland/language", "clock", "custom/power"]
+        "modules": ["group/rings", "custom/mic", "custom/bluetooth","network", "custom/language", "clock", "custom/power"]
     },
     "group/rings": {
         "orientation": "horizontal",
@@ -100,9 +100,12 @@
         "restart-interval": 1,
         "on-click": "hyprctl dispatch 'hl.dsp.focus({ workspace = 6 })'"
     },
-    "hyprland/language": {
-        "format": "󰌌 {short}",
-        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+    "custom/language": {
+        "exec": "~/.config/waybar/scripts/keyboard-layout.sh",
+        "interval": 1,
+        "signal": 3,
+        "tooltip": false,
+        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next && pkill -RTMIN+3 waybar"
     },
     "network": {
         "format-wifi": " {signalStrength}%",

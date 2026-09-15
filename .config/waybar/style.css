@@ -55,7 +55,7 @@ window#waybar.hidden {
 #clock,
 #custom-mic,
 #custom-bluetooth,
-#language,
+#custom-language,
 #custom-power,
 #custom-media {
 	background: transparent;
@@ -73,7 +73,7 @@ window#waybar.hidden {
 #clock:hover,
 #custom-mic:hover,
 #custom-bluetooth:hover,
-#language:hover,
+#custom-language:hover,
 #custom-power:hover,
 #custom-media:hover,
 #custom-launcher:hover {
@@ -109,7 +109,7 @@ window#waybar.hidden {
 	padding-right: 8px;
 }
 
-#language {
+#custom-language {
 	color: @fg;
 }
 

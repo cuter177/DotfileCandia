@@ -33,7 +33,7 @@ hl.on("hyprland.start", function()
     -- UWSM already exports the Wayland session environment.
     hl.exec_cmd("swww-daemon")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 12")
-    hl.exec_cmd("waybar")
+    hl.exec_cmd("sh -c 'sleep 2 && waybar'")
     hl.exec_cmd("~/.config/waybar/scripts/monitorea-fondo.sh")
     hl.exec_cmd("mako")
 end)
