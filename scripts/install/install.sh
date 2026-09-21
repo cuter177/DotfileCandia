@@ -13,10 +13,11 @@ Uso: install.sh [--dry-run] [--skip-apps]
 Instala el rice completo de DotfileCandia (solo Arch Linux):
   paquetes, configs de Hyprland/Waybar/temas, Zsh+Kitty, y apps extra.
 
-  --dry-run     muestra comandos sin ejecutarlos
-  --skip-apps   omite Spotify, Zen Browser y Thunderbird extra
-  --skip-nvm    se reenvía a shell.sh
-  --skip-kitty  se reenvía a shell.sh (no recomendado en el rice completo)
+  --dry-run          muestra comandos sin ejecutarlos
+  --skip-apps        omite Spotify, Zen Browser y Thunderbird extra
+  --skip-nvm         se reenvía a shell.sh
+  --skip-terminal    se reenvía a shell.sh (no recomendado en el rice completo)
+  --terminal <name>  emulador de terminal a instalar/configurar
 
 Después:
   - cierra sesión y entra en Hyprland
@@ -56,8 +57,9 @@ log "2/4 configs"
 log "3/4 shell + Kitty"
 shell_args=()
 [[ "$DRY_RUN" -eq 1 ]] && shell_args+=(--dry-run)
-[[ "$SKIP_KITTY" -eq 1 ]] && shell_args+=(--skip-kitty)
+[[ "$SKIP_TERMINAL" -eq 1 ]] && shell_args+=(--skip-terminal)
 [[ "$SKIP_NVM" -eq 1 ]] && shell_args+=(--skip-nvm)
+[[ -n "$FORCE_TERMINAL" ]] && shell_args+=(--terminal "$FORCE_TERMINAL")
 "$INSTALL_DIR/shell.sh" "${shell_args[@]}"
 
 if [[ "$SKIP_APPS" -eq 1 ]]; then

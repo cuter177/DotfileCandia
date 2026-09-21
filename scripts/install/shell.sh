@@ -12,22 +12,30 @@ OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/
 
 usage() {
   cat <<'EOF'
-Uso: shell.sh [--dry-run] [--skip-kitty] [--skip-nvm]
+Uso: shell.sh [opciones]
 
-Instala Zsh, Oh My Zsh, plugins, .zshrc y (por defecto) Kitty.
-Funciona en Arch, Debian/Ubuntu y Fedora. No instala Hyprland.
+Instala Zsh, Oh My Zsh, plugins, .zshrc y el emulador de terminal
+detectado (kitty, ghostty, wezterm, alacritty, konsole, gnome-terminal,
+xterm). Funciona en Arch, Debian/Ubuntu, WSL, Fedora/RHEL y Gentoo.
+No instala Hyprland.
 
-  --dry-run      muestra comandos sin ejecutarlos
-  --skip-kitty   no instala ni copia Kitty
-  --skip-nvm     no instala NVM
+  --dry-run            muestra comandos sin ejecutarlos
+  --terminal <nombre>  fuerza el emulador a instalar/configurar
+  --skip-terminal      no instala ni copia el emulador (alias: --skip-kitty)
+  --skip-nvm           no instala NVM
+  --arch               fuerza gestor de paquetes de Arch (pacman)
+  --debian             fuerza gestor de paquetes de Debian/Ubuntu (apt)
+  --wsl                fuerza entorno WSL (apt)
+  --gentoo             fuerza gestor de paquetes de Gentoo (emerge)
+  --redhat             fuerza gestor de paquetes de Fedora/RHEL (dnf)
+
+Sin flags de distro se autodetecta con /etc/os-release y WSL.
+Sin --terminal se autodetecta el emulador en uso (o el primero instalado).
 EOF
 }
 
 install_arch_shell_pkgs() {
-  local pkgs=(zsh git curl eza kitty ttf-jetbrains-mono-nerd fastfetch playerctl)
-  if [[ "$SKIP_KITTY" -eq 1 ]]; then
-    pkgs=(zsh git curl eza ttf-jetbrains-mono-nerd fastfetch playerctl)
-  fi
+  local pkgs=(zsh git curl eza ttf-jetbrains-mono-nerd fastfetch playerctl)
   log "paquetes shell (pacman)"
   run sudo pacman -S --needed --noconfirm "${pkgs[@]}"
 }
@@ -39,9 +47,6 @@ apt_has() {
 install_debian_shell_pkgs() {
   local required=(zsh git curl)
   local optional=(eza fastfetch playerctl fonts-jetbrains-mono)
-  if [[ "$SKIP_KITTY" -eq 0 ]]; then
-    required+=(kitty)
-  fi
   log "apt-get update"
   run sudo apt-get update
   log "paquetes shell (apt)"
@@ -60,12 +65,9 @@ dnf_has() {
   dnf list --available "$1" >/dev/null 2>&1 || dnf list --installed "$1" >/dev/null 2>&1
 }
 
-install_fedora_shell_pkgs() {
+install_redhat_shell_pkgs() {
   local required=(zsh git curl)
   local optional=(eza fastfetch playerctl jetbrains-mono-fonts)
-  if [[ "$SKIP_KITTY" -eq 0 ]]; then
-    required+=(kitty)
-  fi
   log "paquetes shell (dnf)"
   run sudo dnf install -y "${required[@]}"
   local pkg
@@ -78,16 +80,71 @@ install_fedora_shell_pkgs() {
   done
 }
 
+emerge_pkg() {
+  run sudo emerge --ask=n --noreplace "$1" || warn "no se pudo instalar $1"
+}
+
+install_gentoo_shell_pkgs() {
+  log "paquetes shell (emerge)"
+  emerge_pkg app-shells/zsh
+  emerge_pkg dev-vcs/git
+  emerge_pkg net-misc/curl
+  emerge_pkg sys-apps/eza
+  emerge_pkg app-misc/fastfetch
+  emerge_pkg media-sound/playerctl
+  emerge_pkg media-fonts/jetbrains-mono
+}
+
 install_shell_packages() {
   if is_arch; then
     install_arch_shell_pkgs
-  elif is_debian; then
+  elif is_debian || is_wsl; then
     install_debian_shell_pkgs
-  elif is_fedora; then
-    install_fedora_shell_pkgs
+  elif is_redhat; then
+    install_redhat_shell_pkgs
+  elif is_gentoo; then
+    install_gentoo_shell_pkgs
   else
     warn "distro no reconocida ($(os_id)); se omiten paquetes"
-    warn "instala a mano: zsh git curl kitty eza fastfetch playerctl y una Nerd Font"
+    warn "instala a mano: zsh git curl eza fastfetch playerctl y una Nerd Font"
+  fi
+}
+
+install_terminal() {
+  [[ "$SKIP_TERMINAL" -eq 0 ]] || { warn "omitido: emulador de terminal"; return 0; }
+  local term="$TERM_EMULATOR"
+  if [[ -z "$term" ]]; then
+    warn "no se detectó ningún emulador; usa --terminal <nombre>"
+    return 0
+  fi
+  if terminal_installed "$term"; then
+    ok "terminal $term ya instalado"
+    return 0
+  fi
+  log "instalando terminal: $term"
+  local pkg
+  if is_arch; then
+    pkg="$(terminal_package "$term" arch)"
+    run sudo pacman -S --needed --noconfirm "$pkg"
+  elif is_debian || is_wsl; then
+    pkg="$(terminal_package "$term" debian)"
+    if [[ "$DRY_RUN" -eq 1 ]] || apt_has "$pkg"; then
+      run sudo apt-get install -y "$pkg" || warn "no se pudo instalar $pkg"
+    else
+      warn "no disponible en apt: $pkg"
+    fi
+  elif is_redhat; then
+    pkg="$(terminal_package "$term" redhat)"
+    if [[ "$DRY_RUN" -eq 1 ]] || dnf_has "$pkg"; then
+      run sudo dnf install -y "$pkg" || warn "no se pudo instalar $pkg"
+    else
+      warn "no disponible en dnf: $pkg"
+    fi
+  elif is_gentoo; then
+    pkg="$(terminal_package "$term" gentoo)"
+    emerge_pkg "$pkg"
+  else
+    warn "distro no reconocida; instala $term a mano"
   fi
 }
 
@@ -136,18 +193,24 @@ copy_shell_dotfiles() {
   fi
 }
 
-copy_kitty() {
-  [[ "$SKIP_KITTY" -eq 0 ]] || return 0
-  local src="$REPO_ROOT/.config/kitty"
-  [[ -d "$src" ]] || return 0
-  backup_path "$HOME/.config/kitty"
-  log "copiando config de Kitty"
-  ensure_dir "$HOME/.config/kitty"
+copy_terminal_config() {
+  [[ "$SKIP_TERMINAL" -eq 0 ]] || return 0
+  local term="$TERM_EMULATOR"
+  [[ -n "$term" ]] || return 0
+  local src="$REPO_ROOT/.config/$term"
+  if [[ ! -d "$src" ]]; then
+    warn "no hay config en el repo para $term; se omite"
+    return 0
+  fi
+  local dest="$HOME/.config/$term"
+  backup_path "$dest"
+  log "copiando config de $term"
+  ensure_dir "$dest"
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    printf '[dry-run] cp -a %s/. %s/\n' "$src" "$HOME/.config/kitty"
+    printf '[dry-run] cp -a %s/. %s/\n' "$src" "$dest"
   else
-    cp -a "$src"/. "$HOME/.config/kitty/"
-    rm -f "$HOME/.config/kitty/"*.bak
+    cp -a "$src"/. "$dest"/
+    rm -f "$dest/"*.bak
   fi
 }
 
@@ -196,11 +259,19 @@ fi
 
 parse_common_args "$@" || { usage; exit 1; }
 
+TERM_EMULATOR="$(detect_terminal)"
+if [[ -n "$TERM_EMULATOR" ]]; then
+  log "emulador de terminal: $TERM_EMULATOR"
+else
+  warn "no se detectó emulador de terminal (usa --terminal <nombre>)"
+fi
+
 install_shell_packages
+install_terminal
 install_oh_my_zsh
 install_zsh_plugins
 copy_shell_dotfiles
-copy_kitty
+copy_terminal_config
 install_nvm
 change_shell
 ok "shell listo"

@@ -42,13 +42,13 @@ cd DotfileCandia
 ./scripts/install/install.sh --skip-apps
 ```
 
-`--skip-apps` skips Spotify (Flatpak), Zen Browser (AUR), and extra Thunderbird handling. `--skip-nvm` and `--skip-kitty` are forwarded to the shell installer.
+`--skip-apps` skips Spotify (Flatpak), Zen Browser (AUR), and extra Thunderbird handling. `--skip-nvm`, `--skip-terminal` and `--terminal <name>` are forwarded to the shell installer.
 
 What it does:
 
 1. Installs pacman + AUR packages (uses `yay` or `paru`; installs `yay` if neither exists)
 2. Copies configs into `~/.config` (existing dirs are backed up as `*.bak-YYYYMMDD`)
-3. Installs Zsh + Kitty via `shell.sh`
+3. Installs Zsh + the detected terminal via `shell.sh`
 4. Installs extra apps unless `--skip-apps`
 
 After install:
@@ -61,18 +61,21 @@ Brightness uses `brightnessctl`. Wallpapers use **swww**, not hyprpaper.
 
 ---
 
-## Shell + Kitty only (any supported distro)
+## Shell + terminal only (any supported distro)
 
 Use this on another computer, another distro, or a machine without Hyprland:
 
 ```bash
 ./scripts/install/shell.sh
 ./scripts/install/shell.sh --dry-run
-./scripts/install/shell.sh --skip-kitty
+./scripts/install/shell.sh --terminal ghostty
+./scripts/install/shell.sh --skip-terminal
 ./scripts/install/shell.sh --skip-nvm
 ```
 
-Installs Zsh, Oh My Zsh, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-history-substring-search`, copies `.zshrc` / `.p10k.zsh`, copies Kitty config, and optionally NVM. `eza` / `fastfetch` / Nerd Fonts are installed when the distro package exists; aliases in `.zshrc` no-op if a command is missing.
+Installs Zsh, Oh My Zsh, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-history-substring-search`, copies `.zshrc` / `.p10k.zsh`, installs/configures the detected terminal emulator (kitty, ghostty, wezterm, alacritty, konsole, gnome-terminal, xterm), and optionally NVM. `eza` / `fastfetch` / Nerd Fonts are installed when the distro package exists; aliases in `.zshrc` no-op if a command is missing.
+
+Distro detection uses `/etc/os-release` and WSL, and can be forced with `--arch`, `--debian`, `--wsl`, `--gentoo` or `--redhat`. Terminal detection can be forced with `--terminal <name>`; with no repo config for that terminal, only the package is installed.
 
 ---
 
