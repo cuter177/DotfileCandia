@@ -105,7 +105,7 @@
         "interval": 1,
         "signal": 3,
         "tooltip": false,
-        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next && pkill -RTMIN+3 waybar"
+        "on-click": "hyprctl switchxkblayout all next && pkill -RTMIN+3 waybar"
     },
     "network": {
         "format-wifi": " {signalStrength}%",
